@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Graphic Designer Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS RESET & THEME SETUP */
+        :root {
+            --bg-color: #12121c;
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #e94560;
+            --accent-gradient: linear-gradient(45deg, #e94560, #ff7675);
+            --text-color: #e0e0e0;
+            --text-light: #a9a9a9;
+            --glass-bg: rgba(22, 33, 62, 0.6);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --glow-color: rgba(233, 69, 96, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            cursor: none;
+        }
+        body.lightbox-active { overflow: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 6rem 0; overflow: hidden; }
+        h2 {
+            font-size: 2.5rem; text-align: center; margin-bottom: 4rem;
+            text-transform: uppercase; letter-spacing: 2px; position: relative;
+        }
+        h2::after {
+            content: ''; position: absolute; bottom: -15px; left: 50%;
+            transform: translateX(-50%); width: 80px; height: 4px;
+            background: var(--accent-gradient); border-radius: 2px;
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        /* PRELOADER, CURSOR, HEADER (No changes) */
+        #preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-color);z-index:1001;display:flex;justify-content:center;align-items:center;transition:opacity .5s ease}.spinner{width:60px;height:60px;border:5px solid var(--secondary-color);border-top:5px solid var(--accent-color);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{100%{transform:rotate(360deg)}}
+        .cursor{position:fixed;border-radius:50%;pointer-events:none;z-index:2100;transition:transform .2s ease-out,opacity .2s ease-out}.cursor-dot{width:8px;height:8px;background-color:var(--accent-color)}.cursor-outline{width:40px;height:40px;border:2px solid var(--accent-color);opacity:.5}.cursor.hidden{opacity:0}.cursor-outline.hovered{transform:scale(1.5);background-color:var(--glow-color)}
+        .header{position:fixed;top:0;left:0;width:100%;padding:1rem 0;z-index:1000;transition:background-color .3s ease,box-shadow .3s ease}.header.scrolled{background-color:var(--glass-bg);backdrop-filter:blur(10px);box-shadow:0 4px 30px var(--shadow-color)}.navbar{display:flex;justify-content:space-between;align-items:center}.logo{font-size:1.8rem;font-weight:700;color:var(--text-color);text-decoration:none}.nav-links{list-style:none;display:flex}.nav-links li{margin-left:2.5rem}.nav-links a{color:var(--text-light);text-decoration:none;font-size:1rem;font-weight:600;position:relative;transition:color .3s ease}.nav-links a::after{content:'';position:absolute;bottom:-5px;left:0;width:100%;height:2px;background:var(--accent-gradient);transform:scaleX(0);transform-origin:right;transition:transform .3s ease-out}.nav-links a:hover,.nav-links a.active{color:var(--text-color)}.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);transform-origin:left}
+        
+        .cta-button{display:inline-block;padding:.8rem 2.5rem;background:var(--accent-gradient);color:#fff;text-decoration:none;font-weight:600;border-radius:50px;border:none;font-family:'Poppins',sans-serif;transition:transform .3s ease,box-shadow .3s ease;box-shadow:0 5px 20px var(--glow-color)}.cta-button:hover{transform:translateY(-5px);box-shadow:0 10px 25px var(--glow-color)}
+        #home{height:100vh;display:flex;align-items:center;text-align:center;background:linear-gradient(45deg,var(--bg-color) 0%,var(--secondary-color) 100%)}.hero-content{max-width:800px;margin:0 auto}.hero-content h1{font-size:clamp(2.5rem,6vw,4rem);line-height:1.2;text-shadow:0 5px 30px var(--shadow-color)}.hero-content h1 span{color:var(--accent-color)}.hero-content .subtitle{font-size:clamp(1rem,3vw,1.5rem);margin-top:1rem;font-weight:300;color:var(--text-light)}#home .cta-button{margin-top:2.5rem}
+
+        /* --- PORTFOLIO SECTION (SIMPLIFIED) --- */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; perspective: 1000px; }
+        .portfolio-item {
+            position: relative; height: 280px; border-radius: 15px; overflow: hidden;
+            transform-style: preserve-3d; transition: transform 0.5s ease, box-shadow 0.5s ease;
+            cursor: pointer; display: block;
+        }
+        .portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .portfolio-item:hover { box-shadow: 0 20px 40px var(--shadow-color), 0 0 50px var(--glow-color); }
+        .portfolio-item:hover img { transform: scale(1.1); }
+        .portfolio-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 70%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem;
+            opacity: 0; transform: translateY(20px) translateZ(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none;
+        }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; transform: translateY(0) translateZ(50px); }
+        .portfolio-overlay h3 { color: #fff; font-size: 1.5rem; margin-bottom: 0.2rem; }
+        .portfolio-overlay p { color: var(--text-light); font-size: 0.9rem; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .portfolio-item { animation: fadeIn 0.5s ease forwards; }
+
+        /* --- LIGHTBOX --- */
+        .lightbox{position:fixed;z-index:2000;top:0;left:0;width:100%;height:100%;background-color:rgba(10,10,20,.85);backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;opacity:0;transition:opacity .4s ease}.lightbox.active{display:flex;opacity:1}.lightbox-content{max-width:90vw;max-height:90vh;border-radius:10px;box-shadow:0 10px 40px var(--shadow-color);animation:zoomIn .4s ease}@keyframes zoomIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}.lightbox-close{position:absolute;top:2rem;right:2.5rem;font-size:3rem;color:var(--text-light);cursor:pointer;transition:transform .3s ease,color .3s ease}.lightbox-close:hover{color:var(--accent-color);transform:scale(1.2)}
+
+        #about{background-color:var(--primary-color)}.about-content{display:flex;align-items:center;gap:4rem;flex-wrap:wrap}.about-image{flex:1 1 300px;position:relative}.about-image img{width:100%;border-radius:15px;box-shadow:0 15px 30px var(--shadow-color)}.about-text{flex:1 1 60%}.about-text h3{font-size:1.5rem;margin-bottom:1rem;color:var(--text-color)}.about-text p{font-size:1.1rem;line-height:1.8;color:var(--text-light);margin-bottom:1.5rem}
+        
+        /* --- SKILLS SECTION (NEW DESIGN) --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+        .skill-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--secondary-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .skill-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px var(--shadow-color);
+            border-color: var(--accent-color);
+        }
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .skill-logo {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        .skill-logo svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--text-light);
+            transition: fill 0.3s ease, filter 0.3s ease;
+        }
+        .skill-item:hover .skill-logo svg {
+            fill: var(--accent-color);
+            filter: drop-shadow(0 0 8px var(--glow-color));
+        }
+        .skill-item:hover .skill-logo {
+            transform: scale(1.1);
+        }
+        .skill-info {
+            width: 100%;
+        }
+        .skill-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+        .skill-info h3 {
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+        .skill-info span {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        .skill-bar {
+            width: 100%; height: 8px;
+            background-color: var(--secondary-color);
+            border-radius: 10px; overflow: hidden;
+        }
+        .skill-level {
+            height: 100%; width: 0; /* Animated with JS */
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* CONTACT, FOOTER, RESPONSIVE (No changes) */
+        #contact{background-color:var(--primary-color)}.contact-wrapper{max-width:800px;margin:0 auto;text-align:center}.contact-info{display:flex;justify-content:center;gap:1.5rem;margin-bottom:3rem;flex-wrap:wrap}.contact-link{display:inline-flex;align-items:center;padding:.8rem 1.5rem;background-color:var(--secondary-color);text-decoration:none;color:var(--text-light);border-radius:50px;transition:transform .3s ease,background-color .3s ease,color .3s ease}.contact-link:hover{transform:translateY(-5px);background-color:var(--accent-color);color:#fff}.contact-link svg{width:24px;height:24px;margin-right:10px;fill:var(--text-light);transition:fill .3s ease}.contact-link:hover svg{fill:#fff}.contact-form .form-group{margin-bottom:1.5rem}.contact-form .form-input{width:100%;padding:1rem;background:var(--primary-color);border:2px solid var(--secondary-color);border-radius:10px;color:var(--text-color);font-size:1rem;transition:border-color .3s ease}.contact-form .form-input:focus{outline:none;border-color:var(--accent-color)}textarea.form-input{height:150px;resize:vertical}
+        .footer{background-color:var(--bg-color);text-align:center;padding:2rem 0;border-top:1px solid var(--primary-color)}.footer p{color:var(--text-light)}
+        .reveal{opacity:0;transform:translateY(50px);transition:opacity .8s ease-out,transform .8s ease-out}.reveal.visible{opacity:1;transform:translateY(0)}
+        @media(max-width:992px){.container{padding:0 1.5rem}.nav-links{display:none}}@media(max-width:768px){section{padding:4rem 0}h2{font-size:2rem}.about-content{gap:2rem}.portfolio-grid{grid-template-columns:1fr}}@media(max-width:480px){.skills-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+
+    <div class="cursor cursor-dot"></div>
+    <div class="cursor cursor-outline"></div>
+    <div id="preloader"><div class="spinner"></div></div>
+    
+    <header class="header">
+        <div class="container navbar">
+            <a href="#home" class="logo">DESIGNER</a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section id="home">
+            <div class="container hero-content reveal">
+                <h1>I'm <span class="name">Rabi Umer Bhatti</span>,<br>A Creative Graphic Designer</h1>
+                <p class="subtitle">Turning visions into stunning, modern visuals.</p>
+                <a href="#portfolio" class="cta-button">View My Work</a>
+            </div>
+        </section>
+
+        <section id="portfolio">
+            <div class="container">
+                <h2 class="reveal">My Portfolio</h2>
+                <div class="portfolio-grid">
+                    <!-- CUSTOMIZE: Update image paths. data-category is no longer needed. -->
+                     <div class="portfolio-item" data-full-img="janan.png"><img src="janan.png" alt="P1"><div class="portfolio-overlay"></div></div>
+                    <div class="portfolio-item" data-full-img="1.jpg"><img src="1.jpg" alt="P1"><div class="portfolio-overlay"></div></div>
+                    <div class="portfolio-item" data-full-img="pos2.jpg"><img src="pos2.jpg" alt="P2"><div class="portfolio-overlay"></div></div>
+                    <div class="portfolio-item" data-full-img="pos3.jpg"><img src="pos3.jpg" alt="P3"><div class="portfolio-overlay"></div></div>
+                    <div class="portfolio-item" data-full-img="banner.jpg"><img src="banner.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="mani1.jpg"><img src="mani1.jpg" alt="P4"><div class="portfolio-overlay"></div></div>
+                    <div class="portfolio-item" data-full-img="thum1.jpg"><img src="thum1.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="web banner.jpg"><img src="web banner.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="Untitled.jpg"><img src="Untitled.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="post.jpg"><img src="post.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="LOS ANGELES.jpg"><img src="LOS ANGELES.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="zorain tech.jpg"><img src="zorain tech.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="sample.jpg"><img src="sample.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="a-youtube-thumbnail-with-a-dramatic-scen_k97kOWwVSJaql1mntUMGvw_wsTzo1YqSAid00oKkKprhA.jpeg"><img src="a-youtube-thumbnail-with-a-dramatic-scen_k97kOWwVSJaql1mntUMGvw_wsTzo1YqSAid00oKkKprhA.jpeg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="AI +YOUTUBE.jpg"><img src="AI +YOUTUBE.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="me.jpg"><img src="me.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                    <div class="portfolio-item" data-full-img="carrot.jpg"><img src="carrot.jpg" alt="P5"><div class="portfolio-overlay">></div></div>
+                
+                
+                </div>
+
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2 class="reveal">About Me</h2>
+                <div class="about-content">
+                    <div class="about-image reveal">
+                        <img src="me.png" alt="Rabi Umer Bhatti">
+                    </div>
+                    <div class="about-text reveal">
+                        <h3>Hello! I'm a passionate Graphic Designer with a love for clean, smart, and effective design.</h3>
+                        <p>I'm from Pakistan with 2 years of professional experience in creating impactful and visually appealing designs. I specialize in designing flyers, posters, banners, and social media posts that help brands stand out and connect with their audience. With a strong eye for detail and creativity, I blend modern design trends with brand identity to deliver polished and effective visual content.
+
+Whether you're looking to elevate your brand, promote an event, or create engaging digital visuals, I'm here to bring your ideas to life through design.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="skills">
+            <div class="container">
+                <h2 class="reveal">My Toolkit</h2>
+                <div class="skills-grid">
+                    <!-- Skill: Photoshop -->
+                    <div class="skill-item reveal">
+                        <div class="skill-header">
+                            <div class="skill-logo">
+                                <svg viewBox="0 0 24 24"></svg>
+                            </div>
+                            <div class="skill-info">
+                                <div class="skill-info-header"><h3>Adobe Photoshop</h3><span>95%</span></div>
+                                <div class="skill-bar"><div class="skill-level" data-level="95%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Skill: Canva -->
+                    <div class="skill-item reveal">
+                        <div class="skill-header">
+                            <div class="skill-logo">
+                                <svg viewBox="0 0 24 24"></svg>
+                            </div>
+                            <div class="skill-info">
+                                <div class="skill-info-header"><h3>Canva</h3><span>90%</span></div>
+                                <div class="skill-bar"><div class="skill-level" data-level="90%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Skill: AI Tools -->
+                    <div class="skill-item reveal">
+                        <div class="skill-header">
+                            <div class="skill-logo">
+                                <svg viewBox="0 0 24 24"></svg>
+                            </div>
+                            <div class="skill-info">
+                                <div class="skill-info-header"><h3>AI Tools</h3><span>85%</span></div>
+                                <div class="skill-bar"><div class="skill-level" data-level="85%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container contact-wrapper">
+                <h2 class="reveal">Get In Touch</h2>
+                <div class="contact-info reveal">
+                    <a href="https://mail.google.com/" class="contact-link"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>mybussi338@gmail.com</span></a>
+                    <a href="https://www.instagram.com/rabiumerbhatti/" target="_blank" class="contact-link"><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg><span>@rabiumerbhattipan></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container"><p>© 2025 Rabi Umer Bhatti. All Rights Reserved.</p></div>
+    </footer>
+    
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">×</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- PRELOADER & CURSOR & HEADER SCROLL (No change) ---
+        window.addEventListener('load',()=>{(document.getElementById('preloader').style.opacity='0',setTimeout(()=>{document.getElementById('preloader').style.display='none'},500))});const cursorDot=document.querySelector('.cursor-dot'),cursorOutline=document.querySelector('.cursor-outline');window.addEventListener('mousemove',e=>{cursorDot.style.left=`${e.clientX}px`,cursorDot.style.top=`${e.clientY}px`,cursorOutline.animate({left:`${e.clientX}px`,top:`${e.clientY}px`},{duration:500,fill:"forwards"})});document.querySelectorAll('a, button, .portfolio-item, .skill-item').forEach(e=>{e.addEventListener('mouseenter',()=>{cursorOutline.classList.add('hovered')}),e.addEventListener('mouseleave',()=>{cursorOutline.classList.remove('hovered')})});document.body.addEventListener('mouseleave',()=>{cursorDot.classList.add('hidden'),cursorOutline.classList.add('hidden')});document.body.addEventListener('mouseenter',()=>{cursorDot.classList.remove('hidden'),cursorOutline.classList.remove('hidden')});const header=document.querySelector('.header'),navLinks=document.querySelectorAll('.nav-links a'),sections=document.querySelectorAll('main section');window.addEventListener('scroll',()=>{header.classList.toggle('scrolled',window.scrollY>50);let e="";sections.forEach(t=>{const o=t.offsetTop;window.pageYOffset>=o-150&&(e=t.getAttribute('id'))}),navLinks.forEach(t=>{t.classList.remove('active'),t.getAttribute('href').includes(e)&&t.classList.add('active')})});
+
+        // --- 3D TILT EFFECT (No change) ---
+        document.querySelectorAll('.portfolio-item').forEach(t=>{t.addEventListener('mousemove',e=>{const o=t.getBoundingClientRect(),a=e.clientX-o.left,s=e.clientY-o.top,l=(s-t.offsetHeight/2)/(t.offsetHeight/2)*-8,i=(a-t.offsetWidth/2)/(t.offsetWidth/2)*8;t.style.transform=`perspective(1000px) rotateX(${l}deg) rotateY(${i}deg) scale3d(1.05, 1.05, 1.05)`}),t.addEventListener('mouseleave',()=>{t.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)'})});
+
+        // --- LIGHTBOX GALLERY LOGIC (No change) ---
+        const lightbox=document.getElementById('lightbox'),lightboxImg=document.getElementById('lightbox-img'),portfolioItems=document.querySelectorAll('.portfolio-item'),closeBtn=document.querySelector('.lightbox-close');const openLightbox=e=>{lightboxImg.src=e,lightbox.classList.add('active'),document.body.classList.add('lightbox-active')},closeLightbox=()=>{lightbox.classList.remove('active'),document.body.classList.remove('lightbox-active')};portfolioItems.forEach(e=>{e.addEventListener('click',()=>{const t=e.getAttribute('data-full-img');t&&openLightbox(t)})}),closeBtn.addEventListener('click',closeLightbox),lightbox.addEventListener('click',e=>{e.target===lightbox&&closeLightbox()}),document.addEventListener('keydown',e=>{'Escape'===e.key&&lightbox.classList.contains('active')&&closeLightbox()});
+
+        // --- SKILL BAR & SCROLL REVEAL (No change) ---
+        const skillObserver=new IntersectionObserver((e,t)=>{e.forEach(e=>{if(e.isIntersecting){const o=e.target.querySelector('.skill-level');o.style.width=o.dataset.level,t.unobserve(e.target)}})},{threshold:.5});document.querySelectorAll('.skill-item').forEach(e=>{skillObserver.observe(e)});const revealObserver=new IntersectionObserver((e,t)=>{e.forEach(e=>{e.isIntersecting&&(e.target.classList.add('visible'),t.unobserve(e.target))})},{threshold:.1});document.querySelectorAll('.reveal').forEach(e=>{revealObserver.observe(e)});
+    });
+    </script>
+</body>
+</html>
